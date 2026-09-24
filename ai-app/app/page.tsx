@@ -274,7 +274,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FEATURES ──────────────────────────────────────────────────────── */}
-      <section className="px-4 pb-32">
+      <section id="features" className="px-4 pb-32">
         <div className="mx-auto mb-14 max-w-5xl text-center">
           <SectionLabel>Everything you need</SectionLabel>
           <SectionHeading gray="From prompt" blue="to production." />
@@ -333,7 +333,7 @@ export default function LandingPage() {
       </section>
 
       {/* PRICING */}
-      <section className="px-4 pb-32">
+      <section id="pricing" className="px-4 pb-32">
         <div className="mx-auto mb-14 max-w-5xl text-center">
           <SectionLabel>Simple pricing</SectionLabel>
           <SectionHeading gray="Start free," blue="scale when ready." />
@@ -555,8 +555,130 @@ export default function LandingPage() {
         </SignInButton>
       </section>
 
-      <footer className="relative z-10 border-t border-white/7 py-12 mx-auto px-6 flex flex-wrap items-center justify-center text-stone-400">
-        Made by Ashwin😎
+      <footer className="relative z-10 border-t border-white/8 bg-[#080808]/80 backdrop-blur-xl">
+        <div className="mx-auto max-w-7xl px-6 pt-16 pb-12 sm:px-8">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-5 lg:gap-12">
+            {/* Brand column */}
+            <div className="space-y-4 md:col-span-2">
+              <Link href="/" className="inline-flex items-center gap-2.5 select-none">
+                <Image
+                  src="/logo.png"
+                  alt="CodePilot"
+                  width={36}
+                  height={36}
+                  className="h-8 w-auto rounded-lg object-contain"
+                />
+                <span className="font-serif text-lg font-medium tracking-tight text-white/90">
+                  CodePilot
+                </span>
+              </Link>
+              <p className="max-w-sm text-sm leading-relaxed text-white/40">
+                The next-generation AI app builder. Describe what you want to create and watch complete, production-ready React applications come to life inside your browser.
+              </p>
+              <div className="flex items-center gap-2 pt-2">
+                <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs text-white/50">All systems operational</span>
+              </div>
+            </div>
+
+            {/* Links column 1 - Product */}
+            <div className="space-y-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-white/70">
+                Product
+              </p>
+              <ul className="space-y-2.5 text-sm text-white/40">
+                <li>
+                  <Link href="/workspace" className="transition-colors hover:text-white">
+                    App Builder
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/projects" className="transition-colors hover:text-white">
+                    My Projects
+                  </Link>
+                </li>
+                <li>
+                  <a href="#features" className="transition-colors hover:text-white">
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a href="#pricing" className="transition-colors hover:text-white">
+                    Pricing Plans
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Links column 2 - Technologies */}
+            <div className="space-y-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-white/70">
+                Engine
+              </p>
+              <ul className="space-y-2.5 text-sm text-white/40">
+                <li className="flex items-center gap-2">
+                  <span>Google Gemini 3.6</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span>Cline Agentic SDK</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span>Sandpack Live Runtime</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span>Arcjet Threat Shield</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Links column 3 - Creator & Community */}
+            <div className="space-y-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-white/70">
+                Connect
+              </p>
+              <ul className="space-y-2.5 text-sm text-white/40">
+                <li>
+                  <a
+                    href="https://github.com/Ashwin-yadav24/codepilot"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition-colors hover:text-white"
+                  >
+                    GitHub Repository
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/Ashwin-yadav24"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition-colors hover:text-white"
+                  >
+                    Ashwin's GitHub
+                  </a>
+                </li>
+                <li>
+                  <span className="inline-flex items-center rounded-full border border-blue-500/20 bg-blue-500/10 px-2.5 py-0.5 text-[11px] font-medium text-blue-400">
+                    v1.0.0 Public Beta
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom row */}
+          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/6 pt-8 sm:flex-row">
+            <p className="text-xs text-white/35">
+              © {new Date().getFullYear()} CodePilot AI. Crafted with precision by{" "}
+              <span className="font-medium text-white/75">Ashwin</span>.
+            </p>
+            <div className="flex items-center gap-6 text-xs text-white/30">
+              <span className="transition-colors hover:text-white/60">Privacy Policy</span>
+              <span className="transition-colors hover:text-white/60">Terms of Service</span>
+              <span className="transition-colors hover:text-white/60">Security</span>
+            </div>
+          </div>
+        </div>
       </footer>
     </main>
   );
