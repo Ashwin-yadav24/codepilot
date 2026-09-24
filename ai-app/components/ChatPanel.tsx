@@ -207,11 +207,11 @@ export function ChatPanel({
                 ) : (
                   <div className="flex items-start gap-2">
                     <Image
-                      src="/logo-short.jpeg"
-                      alt="Forge"
+                      src="/logo.png"
+                      alt="CodePilot"
                       width={24}
                       height={24}
-                      className="mt-0.5 h-6 w-6 shrink-0 rounded-md"
+                      className="mt-0.5 h-6 w-6 shrink-0 rounded-md object-contain"
                     />
                     <div className="min-w-0 rounded-2xl rounded-tl-sm bg-white/5 px-3.5 py-2.5">
                       {isLiveStream && !msg.content ? (
@@ -254,11 +254,11 @@ export function ChatPanel({
           {isGenerating && (
             <div className="flex items-start gap-2">
               <Image
-                src="/logo-short.jpeg"
-                alt="Forge"
+                src="/logo.png"
+                alt="CodePilot"
                 width={24}
                 height={24}
-                className="mt-0.5 h-6 w-6 shrink-0 rounded-md"
+                className="mt-0.5 h-6 w-6 shrink-0 rounded-md object-contain"
               />
               <div className="rounded-2xl rounded-tl-sm bg-white/5 px-3.5 py-3">
                 <div className="space-y-2">
