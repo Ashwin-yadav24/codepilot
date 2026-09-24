@@ -210,41 +210,70 @@ export async function POST(request: NextRequest) {
               break;
             } catch (err: unknown) {
               lastStreamError = err;
-              console.warn(`[gen-ai-code] ${candidate} attempt ${attempt + 1} failed:`, err);
-              // Wait 800ms before retrying or switching models
-              await new Promise((r) => setTimeout(r, 800));
+              console.warn(`[gen-ai-code] ${candidate} stream attempt ${attempt + 1} failed:`, err);
+              await new Promise((r) => setTimeout(r, 600));
             }
           }
           if (geminiStream) break;
         }
 
-        if (!geminiStream) {
-          throw lastStreamError || new Error("All Gemini models temporarily unavailable. Please try again.");
-        }
-
         let accumulated = ""; // final JSON output
         let lastEmitTime = 0; // throttle thought emissions
 
-        for await (const chunk of geminiStream) {
-          const parts = chunk.candidates?.[0]?.content?.parts ?? [];
+        if (geminiStream) {
+          try {
+            for await (const chunk of geminiStream) {
+              const parts = chunk.candidates?.[0]?.content?.parts ?? [];
 
-          for (const part of parts) {
-            if (!part.text) continue;
+              for (const part of parts) {
+                if (!part.text) continue;
 
-            if (part.thought) {
-              // Extract just the short label — not the full wall of text
-              const now = Date.now();
-              if (now - lastEmitTime > 600) {
-                const label = extractThoughtLabel(part.text);
-                if (label) {
-                  enqueue(sseEvent("status", { message: label }));
-                  lastEmitTime = now;
+                if (part.thought) {
+                  const now = Date.now();
+                  if (now - lastEmitTime > 600) {
+                    const label = extractThoughtLabel(part.text);
+                    if (label) {
+                      enqueue(sseEvent("status", { message: label }));
+                      lastEmitTime = now;
+                    }
+                  }
+                } else {
+                  accumulated += part.text;
                 }
               }
-            } else {
-              // Actual JSON output
-              accumulated += part.text;
             }
+          } catch (streamIterErr) {
+            console.warn("[gen-ai-code] stream iteration interrupted, falling back to direct generateContent:", streamIterErr);
+            accumulated = "";
+          }
+        }
+
+        // Fallback: If streaming was unavailable or interrupted, call standard generateContent
+        if (!accumulated) {
+          enqueue(sseEvent("status", { message: "Generating code…" }));
+          let generated = false;
+          for (const candidate of candidateModels) {
+            try {
+              const directRes = await ai.models.generateContent({
+                model: candidate,
+                contents,
+                config: {
+                  systemInstruction: SYSTEM_PROMPT,
+                  temperature: 0.7,
+                  responseMimeType: "application/json",
+                },
+              });
+              accumulated = directRes.text ?? "";
+              if (accumulated) {
+                generated = true;
+                break;
+              }
+            } catch (directErr) {
+              console.warn(`[gen-ai-code] direct ${candidate} failed:`, directErr);
+            }
+          }
+          if (!generated) {
+            throw lastStreamError || new Error("All AI models are currently busy. Please retry in a few seconds.");
           }
         }
 
