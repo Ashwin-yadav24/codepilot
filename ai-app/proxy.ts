@@ -30,12 +30,9 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  // Clerk auth guard — redirect unauthenticated users away from /workspace
-  const { userId } = await auth();
-
-  if (!userId && isProtectedRoute(req)) {
-    const { redirectToSignIn } = await auth();
-    return redirectToSignIn();
+  // Clerk auth guard — protect workspace and projects routes
+  if (isProtectedRoute(req)) {
+    await auth.protect();
   }
 
   return NextResponse.next();

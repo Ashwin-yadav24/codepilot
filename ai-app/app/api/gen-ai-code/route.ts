@@ -182,18 +182,45 @@ export async function POST(request: NextRequest) {
       try {
         const contents = buildContents(messages, fileData);
 
-        const geminiStream = await ai.models.generateContentStream({
-          model: "gemini-3.6-flash",
-          contents,
-          config: {
-            systemInstruction: SYSTEM_PROMPT,
-            temperature: 0.7,
-            responseMimeType: "application/json",
-            thinkingConfig: {
-              includeThoughts: true,
-            },
-          },
-        });
+        // Candidate models to fallback across if Google returns 503 UNAVAILABLE on one
+        const candidateModels = [
+          "gemini-3.5-flash-lite",
+          "gemini-3.6-flash",
+          "gemini-3.5-flash",
+        ];
+
+        let geminiStream = null;
+        let lastStreamError: unknown = null;
+
+        for (const candidate of candidateModels) {
+          for (let attempt = 0; attempt < 2; attempt++) {
+            try {
+              geminiStream = await ai.models.generateContentStream({
+                model: candidate,
+                contents,
+                config: {
+                  systemInstruction: SYSTEM_PROMPT,
+                  temperature: 0.7,
+                  responseMimeType: "application/json",
+                  thinkingConfig: {
+                    includeThoughts: true,
+                  },
+                },
+              });
+              break;
+            } catch (err: unknown) {
+              lastStreamError = err;
+              console.warn(`[gen-ai-code] ${candidate} attempt ${attempt + 1} failed:`, err);
+              // Wait 800ms before retrying or switching models
+              await new Promise((r) => setTimeout(r, 800));
+            }
+          }
+          if (geminiStream) break;
+        }
+
+        if (!geminiStream) {
+          throw lastStreamError || new Error("All Gemini models temporarily unavailable. Please try again.");
+        }
 
         let accumulated = ""; // final JSON output
         let lastEmitTime = 0; // throttle thought emissions
