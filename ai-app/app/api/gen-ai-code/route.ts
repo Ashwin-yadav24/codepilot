@@ -83,7 +83,8 @@ RULES:
 7. Do not include react, react-dom, or tailwindcss in "dependencies" — they are always available.
 8. When modifying existing code, include ALL files (both changed and unchanged) in "files".
 9. Keep code clean, readable, and production-quality.
-10. If the user attaches an image, use it as a design reference and match the layout/style as closely as possible.`;
+10. Valid JSX Syntax: Be extremely careful with JSX template literals and ternary expressions. Never break a ternary operator across template literals incorrectly (e.g. use proper \`\${condition ? "classA" : "classB"}\` syntax, never assignment \`=\` instead of \`?\`). Always ensure valid JavaScript syntax.
+11. If the user attaches an image, use it as a design reference and match the layout/style as closely as possible.`;
 
 // ─── Gemini contents builder ──────────────────────────────────────────────────
 
