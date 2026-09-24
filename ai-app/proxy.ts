@@ -1,11 +1,9 @@
 import arcjet, { detectBot, shield } from "@arcjet/next";
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const isProtectedRoute = createRouteMatcher([
-  "/workspace(.*)",
-  "/projects(.*)",
-]);
+const isProtectedRoute = (pathname: string) =>
+  pathname.startsWith("/workspace") || pathname.startsWith("/projects");
 
 // ─── Global Arcjet client ─────────────────────────────────────────────────────
 // Runs on every request. Looser than the route-level client — allows search
@@ -31,7 +29,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   // Clerk auth guard — protect workspace and projects routes
-  if (isProtectedRoute(req)) {
+  if (isProtectedRoute(req.nextUrl.pathname)) {
     await auth.protect();
   }
 

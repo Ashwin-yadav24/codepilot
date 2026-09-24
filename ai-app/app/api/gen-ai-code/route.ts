@@ -193,28 +193,24 @@ export async function POST(request: NextRequest) {
         let lastStreamError: unknown = null;
 
         for (const candidate of candidateModels) {
-          for (let attempt = 0; attempt < 2; attempt++) {
-            try {
-              geminiStream = await ai.models.generateContentStream({
-                model: candidate,
-                contents,
-                config: {
-                  systemInstruction: SYSTEM_PROMPT,
-                  temperature: 0.7,
-                  responseMimeType: "application/json",
-                  thinkingConfig: {
-                    includeThoughts: true,
-                  },
+          try {
+            geminiStream = await ai.models.generateContentStream({
+              model: candidate,
+              contents,
+              config: {
+                systemInstruction: SYSTEM_PROMPT,
+                temperature: 0.7,
+                responseMimeType: "application/json",
+                thinkingConfig: {
+                  includeThoughts: true,
                 },
-              });
-              break;
-            } catch (err: unknown) {
-              lastStreamError = err;
-              console.warn(`[gen-ai-code] ${candidate} stream attempt ${attempt + 1} failed:`, err);
-              await new Promise((r) => setTimeout(r, 600));
-            }
+              },
+            });
+            if (geminiStream) break;
+          } catch (err: unknown) {
+            lastStreamError = err;
+            console.warn(`[gen-ai-code] ${candidate} stream failed, checking next model or direct generation`);
           }
-          if (geminiStream) break;
         }
 
         let accumulated = ""; // final JSON output
