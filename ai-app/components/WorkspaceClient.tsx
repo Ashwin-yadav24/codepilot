@@ -200,10 +200,12 @@ export function WorkspaceClient({
           setMessages((prev) => prev.slice(0, -1));
           return;
         }
-        console.error(err);
-        toast.error(
-          err instanceof Error ? err.message : "Something went wrong."
-        );
+        console.warn("Generation error:", err);
+        const displayMsg =
+          err instanceof Error
+            ? err.message.replace(/^Generation error: /i, "")
+            : "Something went wrong. Please try again.";
+        toast.error(displayMsg);
         setMessages((prev) => prev.slice(0, -1));
       } finally {
         generateAbortRef.current = null;
