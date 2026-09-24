@@ -318,11 +318,17 @@ export async function POST(request: NextRequest) {
               updatedUser?.credits ?? user.credits - CREDIT_COST_PER_GENERATION,
           })
         );
-      } catch (err) {
+      } catch (err: unknown) {
+        const errorMsg =
+          err instanceof Error
+            ? err.message
+            : typeof err === "object" && err !== null
+            ? JSON.stringify(err)
+            : String(err);
         console.error("[gen-ai-code] stream error:", err);
         enqueue(
           sseEvent("error", {
-            message: "Something went wrong. Please try again.",
+            message: `Generation error: ${errorMsg}`,
           })
         );
       } finally {

@@ -187,8 +187,10 @@ export function WorkspaceClient({
               } else if (event.type === "error") {
                 throw new Error(event.message);
               }
-            } catch {
-              // skip malformed SSE lines
+            } catch (innerErr) {
+              if (innerErr instanceof Error && innerErr.message !== "Unexpected end of JSON input") {
+                throw innerErr;
+              }
             }
           }
         }
