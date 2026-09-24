@@ -12,6 +12,7 @@ const isProtectedRoute = createRouteMatcher([
 // engines and link previews so the landing page gets indexed and
 // Slack/Twitter unfurls work.
 
+// Sheild and Bot Protection
 const aj = arcjet({
   key: process.env.ARCJET_KEY!,
   rules: [
