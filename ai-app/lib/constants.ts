@@ -7,7 +7,7 @@ export const PLANS = {
   starter: {
     label: "Starter",
     credits: 50,
-    price: 9,
+    price: 7,
   },
   pro: {
     label: "Pro",
@@ -35,9 +35,9 @@ export const PRICING_PLANS = [
     key: "starter",
     label: "Starter",
     description: "For developers who build regularly.",
-    price: 9,
+    price: 7,
     featured: true,
-    planId: "cplan_3DvxGsOeYA5bpJzGWPi8o7wScRD",
+    planId: "cplan_3Jjwilqy66XkOQlBBsoGpPKwfoS",
     active: false,
     features: [
       "50 generations / month",
@@ -52,7 +52,7 @@ export const PRICING_PLANS = [
     description: "For power users who ship fast.",
     price: 29,
     featured: false,
-    planId: "cplan_3DvxTfywwB0NyQ1iqANclgNqlq8",
+    planId: "cplan_3Jjx7mdhp61FQPQCz6GV7b9jU3X",
     active: false,
     features: [
       "150 generations / month",
